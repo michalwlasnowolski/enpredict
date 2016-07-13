@@ -23,19 +23,22 @@ def index(request):
 
     return render(request, 'enpredict/index.html')
 
+
 def tutorial(request):
 
     return render(request, 'enpredict/tutorial.html', locals())
 
+
 def compute_prediction(request):
 
-       
     return render(request, 'enpredict/compute_prediction.html')
+
 
 def mutate(request):
 
-       
     return render(request, 'enpredict/mutate.html')
+
+
 
 def resources_vista(request):
 
@@ -49,6 +52,7 @@ def resources_vista(request):
         records_list.append(record)
 
     return render(request, 'enpredict/resources.html', locals())
+
 
 def resources_fly(request):
     chr_names=['chr2L', 'chr2R', 'chr3L', 'chr3R', 'chr4', 'chrX']
@@ -67,40 +71,7 @@ def resources_fly(request):
     return render(request, 'enpredict/resources.html', locals())
 
 
-def download_wigfile(request):     
-   
-    #list_of_files=request.POST.getlist('check_download')
-
-    in_memory = StringIO()
-    zip = ZipFile(in_memory, "a")
-    list_of_files=['static/enpredict/data/vista.tar.gz']
-    print 'hejo'
-    for i in xrange(len(list_of_files)):
-
-        file_path=list_of_files[i]
-        filename=file_path.split('/')[-1]
-        zip.write('/home/enpredict/lemonade/'+file_path, filename)
-   
-    # fix for Linux zip files read in Windows
-    for file in zip.filelist:
-        file.create_system = 0    
-        
-    zip.close()
-
-    response = HttpResponse(content_type="application/zip")
-    response["Content-Disposition"] = "attachment; filename=wigfiles.zip"
-    
-    in_memory.seek(0)    
-    response.write(in_memory.read())
-    
-    return response
-
-
-
-
-
-
-
+# compute a prediction of DNA sequence (of being an enhancer), create a chart using bokeh package and send it to the template by json
 def compute(request):
     
     if request.method == 'POST':
@@ -158,7 +129,7 @@ def compute(request):
         return json_data
         
 
-
+#  find a point mutations which decreases prediction value of the DNA sequence to the level of potentially enhancer inactivating
 def spoil(request):
     
     if request.method == 'POST':

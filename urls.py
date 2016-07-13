@@ -12,10 +12,8 @@ urlpatterns = patterns('',
     url(r'compute', views.compute),
     url(r'mutate', views.mutate),
     url(r'spoil', views.spoil),
-    url(r'download_wigfile', views.download_wigfile),
     url(r'^', views.index),
     
-
 
 )
 
