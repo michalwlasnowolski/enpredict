@@ -3,6 +3,7 @@ import random
 
 class Mutation():
 
+    # compute prediction of being enhancer
     def prediction(self, count_kmers, seq, classifier, which_database, dic, keys, frame):
 
 
@@ -17,7 +18,7 @@ class Mutation():
         return list_predicted[0]
         
 
-
+    #create all possible sequences with point mutation
     def find_mutations(self, s, region):
         all=set(["A","C","G","T"])
         nucs=list(s)

@@ -1,6 +1,6 @@
 class Comparator():
 
-
+    # compare mutated sequence with the original 
     def compare(self, reference_pred_seq, list_results):
 
         reference_seq=reference_pred_seq[1]

@@ -4,7 +4,7 @@ from collections import Counter
 
 class Kmers():
 
-
+    # create all possible 4-mers
     def all_kmers(self, k=4):
         s=[""]
         for i in xrange(k):
@@ -15,7 +15,7 @@ class Kmers():
             s=s2
         return s
 
-
+    
     def rc_kmers(self, kmers):
         res={}
         keys=[]
@@ -28,13 +28,11 @@ class Kmers():
         return keys,res
 
 
+
     def count_vec(self, s, dic, keys, seq_len):
 
          d=Counter([dic[s[i:i+4]] for i in range(len(s)-3)])
 
          return [float(d[k])/seq_len for k in keys]
-
-
-
 
 

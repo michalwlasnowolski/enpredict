@@ -1,3 +1,4 @@
+# adding html tags to results of 'mutate' tool
 class TemplateMutation():
 
     def template_mutation(self, result_pred_seq, reference_pred_seq):
