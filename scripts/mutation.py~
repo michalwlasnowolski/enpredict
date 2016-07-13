@@ -1,0 +1,64 @@
+from seq_cutter import SeqCutter
+from kmers import Kmers
+from predict import Predict
+
+
+
+def prediction(cutter, count_kmers, predict, seq):
+
+    cut_seq=cutter.cutter(seq, 200, 200)
+    kmers=count_kmers.count_kmers(cut_seq, 4, 200, 200)
+    prediction=predict.classification('../pickle.4mers_500_last', kmers, 200)
+    return prediction[0][1]
+
+
+
+
+
+def mutation():
+
+    cutter=SeqCutter()
+    count_kmers=Kmers()
+    predict=Predict()
+
+    seq_list=[]
+    alphabet=['A', 'T', 'G', 'C']
+    sep=''
+    seq='AATCTTTGCTATAATATTACCGGCCGAAGAAATGATGAGGCTCTACTAGAAGTTGGTTGGTATGCAGGCGAAGCACAAACTTAATAATTCTATATCTGTTGCCAAGAATATAACATAGCATTCTTGTACAAAGGCAAATTTAAACTAAGAGGTGTTCAAATGTACCAGCTGACTTAGGGGGATAATCGAAAATAGATCAG'
+
+    reference_result=prediction(cutter, count_kmers, predict, seq)
+    print reference_result
+
+    seq_len=len(seq)
+
+    for i in seq: seq_list.append(i)
+    
+    #for j in xrange(seq_len):
+    
+    for i in alphabet:
+        seq_list[0]=i
+        new_seq=sep.join(seq_list)
+        new_prediction=prediction(cutter, count_kmers, predict, new_seq)
+        print new_prediction
+    
+
+        
+    
+    
+    
+
+    #reference_result=prediction(cutter, count_kmers, predict, seq)
+
+
+    #for i in xrange(seq_len):
+        #seq[0]='Z'
+        #print seq    
+
+    
+
+    
+    
+
+
+mutation()
+

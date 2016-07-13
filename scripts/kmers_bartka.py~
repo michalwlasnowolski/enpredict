@@ -1,0 +1,91 @@
+# coding: utf-8
+from collections import Counter
+import time
+from Bio import Seq
+
+class Kmers():
+
+    s="""GGCAGATTCCCCCTAGACCCGCCCGCACCATGGTCAGGCATGCCCCTCCTCATCGCTGGGCACAGCCCAGAGGGT
+    ATAAACAGTGCTGGAGGCTGGCGGGGCAGGCCAGCTGAGTCCTGAGCAGCAGCCCAGCGCAGCCACCGAGACACC
+    ATGAGAGCCCTCACACTCCTCGCCCTATTGGCCCTGGCCGCACTTTGCATCGCTGGCCAGGCAGGTGAGTGCCCC
+    CACCTCCCCTCAGGCCGCATTGCAGTGGGGGCTGAGAGGAGGAAGCACCATGGCCCACCTCTTCTCACCCCTTTG
+    GCTGGCAGTCCCTTTGCAGTCTAACCACCTTGTTGCAGGCTCAATCCATTTGCCCCAGCTCTGCCCTTGCAGAGG
+    GAGAGGAGGGAAGAGCAAGCTGCCCGAGACGCAGGGGAAGGAGGATGAGGGCCCTGGGGATGAGCTGGGGTGAAC
+    CAGGCTCCCTTTCCTTTGCAGGTGCGAAGCCCAGCGGTGCAGAGTCCAGCAAAGGTGCAGGTATGAGGATGGACC
+    TGATGGGTTCCTGGACCCTCCCCTCTCACCCTGGTCCCTCAGTCTCATTCCCCCACTCCTGCCACCTCCTGTCTG
+    GCCATCAGGAAGGCCAGCCTGCTCCCCACCTGATCCTCCCAAACCCAGAGCCACCTGATGCCTGCCCCTCTGCTC
+    CACAGCCTTTGTGTCCAAGCAGGAGGGCAGCGAGGTAGTGAAGAGACCCAGGCGCTACCTGTATCAATGGCTGGG
+    GTGAGAGAAAAGGCAGAGCTGGGCCAAGGCCCTGCCTCTCCGGGATGGTCTGTGGGGGAGCTGCAGCAGGGAGTG
+    GCCTCTCTGGGTTGTGGTGGGGGTACAGGCAGCCTGCCCTGGTGGGCACCCTGGAGCCCCATGTGTAGGGAGAGG
+    AGGGATGGGCATTTTGCACGGGGGCTGATGCCACCACGTCGGGTGTCTCAGAGCCCCAGTCCCCTACCCGGATCC
+    CCTGGAGCCCAGGAGGGAGGTGTGTGAGCTCAATCCGGACTGTGACG"""
+
+    s="".join(s.split())
+    s=s[:200]
+
+    def all_kmers(self, k=4):
+        s=[""]
+        for i in range(k):
+            s2=[]
+            for i in s:
+                for a in "ACGT":
+                    s2.append(i+a)
+            s=s2
+        return s
+
+
+    #print all_kmers(4)
+
+
+
+    def rc_kmers(self, kmers):
+        res={}
+        keys=[]
+        for s in kmers:
+            if Seq.reverse_complement(s) in keys:
+                res[s]=Seq.reverse_complement(s)
+            else:
+                keys.append(s)
+                res[s]=s
+        return keys,res
+
+    keys,dic=rc_kmers(all_kmers(4))
+    #print keys
+
+
+
+        
+    def count(self, s):
+         return Counter([dic[s[i:i+4]] for i in range(len(s)-3)])
+
+    def count_vec(self, s):
+         d= Counter([dic[s[i:i+4]] for i in range(len(s)-3)])
+         return [d[k] for k in keys]
+
+    def repeat(self, n,f,s):
+        t=time.time()
+        for i in range(n):
+            f(s)
+        return time.time()-t
+
+    #print repeat(1800,count_vec,s)
+
+    
+    '''
+    def mutations(self, s):
+        all=set(["A","C","G","T"])
+        nucs=list(s)
+        for i,nuc in enumerate(nucs):
+            for mut in all-set([nuc]):
+                yield "".join(nucs[:i]+[mut]+nucs[i+1:])
+
+
+    def f(self, s):
+        l=[x for x in mutations(s)]
+
+    repeat(3,f,s)
+
+    def f2(self, s):
+        l=[count_vec(x) for x in mutations(s)]
+
+    repeat(3,f,s)'''

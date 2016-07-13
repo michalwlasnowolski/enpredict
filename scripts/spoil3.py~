@@ -1,0 +1,127 @@
+import pickle
+import sys
+from sklearn import cross_validation
+from sklearn.metrics import auc_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import tree
+from choose_classifier import Classifier
+import random
+
+class Mutation():
+
+    def prediction(self, count_kmers, seq, classifier, which_database, dic, keys, frame):
+
+
+        kmers=count_kmers.count_vec(seq, dic, keys, frame)
+
+        predicted = classifier.predict_proba(kmers)
+        list_predicted=[]
+        predicted_len=len(predicted)
+        for i in xrange(predicted_len):
+            list_predicted.append(float(predicted[i][1]))
+
+        return list_predicted[0]
+        
+
+
+
+
+    def mutation(self, start, end, cutter, count_kmers, classifier, which_database, candidates, dict_sequences, results_seq_pred, num_best_to_random, dic, keys, frame):
+
+        seq=candidates[0][1]
+
+        del(candidates[0])
+        seq_list=[]
+        alphabet=['T', 'A', 'G', 'C']
+        sep=''
+        the_lowest_list=[]
+            
+        seq_len=len(seq)
+        pre_k_best=[]
+        k_best=[]
+
+        seq_list=list(seq)
+
+        
+        for j in xrange(int(start), int(end)):
+            new_seq_list=list(seq_list)
+            for nucleotide in alphabet:
+                if seq_list[j]==nucleotide:
+                   
+                    pass
+                else:
+                    new_seq_list[j]=nucleotide
+                    new_seq=sep.join(new_seq_list)
+                    new_prediction=self.prediction(count_kmers, new_seq, classifier, which_database, dic, keys, frame)
+                    
+                    pre_k_best.append([new_prediction, new_seq])
+
+        k_best_sorted=sorted(pre_k_best)
+        
+
+        best_for_choice=[]
+
+
+        if k_best_sorted[0][1] in dict_sequences: print 'skucha - najlepszy juz byl w slowniku uzyty'
+
+
+        for i in xrange(0, len(k_best_sorted)):
+
+            if not k_best_sorted[i][1] in dict_sequences:
+                best_for_choice.append(k_best_sorted[i])
+
+            if len(best_for_choice) == num_best_to_random: 
+                break
+
+        ########## trzeba cos zmienic zeby nie bylo skuchy
+
+
+
+
+        #mozna sie zastanowic nad skresleniem tak duzej liczby opcji
+        ####to jest dobry#####
+        pre_candidates=[best_for_choice[0], random.choice(best_for_choice[1:])]
+        for i in xrange(len(pre_candidates)): 
+#0.63
+            dict_sequences[pre_candidates[i][1]]=pre_candidates[i][0]
+
+            if pre_candidates[i][0] < 0.63: 
+                results_seq_pred.append(pre_candidates[i])
+            
+            else:
+              candidates.append(pre_candidates[i])
+
+
+                        
+        return candidates, dict_sequences, results_seq_pred
+
+    
+    def best_mutation(self, start, end, seq, cutter, count_kmers, which_database, how_many_results, dic, keys, frame):
+
+
+        which_classifier=Classifier()
+        which_classifier_name=which_classifier.choose_classifier(which_database)
+        classifier = pickle.load(open(which_classifier_name))
+       
+        reference_result=self.prediction(count_kmers, seq, classifier, which_database, dic, keys, frame)
+
+        reference_seq_pred=[reference_result, seq]
+        print reference_seq_pred
+
+        dict_sequences={seq:reference_result}
+        candidates=[[reference_result, seq]]        
+
+        results_seq_pred=[]
+
+        while len(candidates)!=0:
+            print len(candidates)
+            candidates, dict_sequences, results_seq_pred=self.mutation(start, end, cutter, count_kmers, classifier, which_database, candidates, dict_sequences, results_seq_pred, 10, dic, keys, frame)
+        
+        if how_many_results>len(results_seq_pred): finally_results=sorted(results_seq_pred)
+        else:   finally_results=sorted(results_seq_pred)[:how_many_results]
+
+        return finally_results, reference_seq_pred
+
+
+
+

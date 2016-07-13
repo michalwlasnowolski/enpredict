@@ -1,0 +1,16 @@
+{% extends "enpredict/base.html" %}
+{% load staticfiles %}
+{% block title %} Tutorial {% endblock %}
+{% block content %}
+
+
+<h2> EnPredict wielkim serwisem jest </h2>
+
+Resources:
+
+W serwisie EnPredict znajdują się dane z wartościami predykcji w formacie wigfile (link do formatu WIG)
+
+
+
+
+{% endblock content %}

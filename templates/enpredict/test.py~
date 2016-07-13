@@ -1,0 +1,16 @@
+from django.shortcuts import render
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import components
+from bokeh.plotting import figure, output_file, show
+
+
+
+def simple_chart(request):
+    plot = figure()
+    plot.line([1,2], [3,4])
+    
+    script, div = components(plot)
+    output_file("lines.html", title="line plot example")
+    show(p)
+    

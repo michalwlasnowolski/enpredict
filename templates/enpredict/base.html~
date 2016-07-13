@@ -1,0 +1,91 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %} Untitled {% endblock%} - Enhancer site</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link href="{% static 'enpredict/bootstrap/css/enpredict.css' %}" rel="stylesheet">
+<link href="{% static 'enpredict/bootstrap/css/bootstrap-select.css' %}" rel="stylesheet">
+<link href="{% static 'enpredict/bootstrap/css/jquery.bootstrap-touchspin.css' %}" rel="stylesheet">
+
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="{%static 'enpredict/bootstrap/js/bootstrap-select.js' %}" type="text/javascript"></script>
+<link href="{% static 'enpredict/bootstrap/css/bokeh-0.10.0.min.css' %}" rel="stylesheet">
+<script src="{% static 'enpredict/bootstrap/js/bokeh-0.10.0.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'enpredict/bootstrap/js/spoil.js' %}" type="text/javascript"></script>
+<script src="{% static 'enpredict/bootstrap/js/compute_prediction.js' %}" type="text/javascript"></script>
+<script src="{% static 'enpredict/bootstrap/js/jquery.bootstrap-touchspin.js' %}" type="text/javascript"></script>
+<script src="{% static 'enpredict/bootstrap/js/resources.js' %}" type="text/javascript"></script>
+<script src="{% static 'enpredict/bootstrap/js/index.js' %}" type="text/javascript"></script>
+
+
+</head>
+
+<!--<body background="{% static 'enpredict/images/EnP_nastrone_tlo.png' %}">-->
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                <img src="{% static 'enpredict/images/EnP_nastrone2.png' %}" /></a>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    
+                    
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="/" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+					            <li><a href="vista">Human VISTA (hg19)</a></li>
+					            <li class="divider"></li>
+					            <li><a href="fly">Drosophila melanogaster (dm3)</a></li>
+
+					        </ul>
+					    
+                    </li>
+                                <li><a href="compute_prediction">Compute prediction</a></li>
+					            <li><a href="mutate">Mutate</a></li>
+                                <!--<li><a href="tutorial">Tutorial</a></li>-->
+					            
+
+					
+                       
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% block content %}
+
+{%endblock %}
+
+
+<div class="container">
+<footer class="footer"><p class="text-muted credit">Copyright &copy; Faculty of Mathematics, Informatics and Mechanics University of Warsaw</p></footer>
+</div>
+
+
+
+
+</body>
+
+</html>

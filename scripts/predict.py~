@@ -1,0 +1,35 @@
+import pickle
+import sys, getopt
+from sklearn import cross_validation
+from sklearn.metrics import auc_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import tree
+from numpy import transpose
+
+class Predict():
+
+    
+        
+
+
+    def classification(self, data, step, classifier):
+
+ 
+
+        #data_file = self.read_data(data)
+
+        #predicted = classifier.predict_proba(self.read_data(data))
+
+        
+        predicted = classifier.predict_proba(data)
+        list_predicted=[]
+        predicted_len=len(predicted)
+        
+        for i in xrange(predicted_len):
+	        list_predicted.append([(i*step)+1, float(predicted[i][1])])
+       
+
+        return list_predicted
+
+
+

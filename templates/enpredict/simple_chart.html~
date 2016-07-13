@@ -1,0 +1,58 @@
+
+{% extends "enpredict/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Compute prediction {% endblock %}
+
+    
+
+{% block content %}
+
+    {{the_div | safe}}
+{{the_script | safe}}
+<!--<div class="container">
+<div class="row">
+<div class="col-lg-6">
+
+
+            
+            <h3>Put FASTA sequence:</h3>
+            <textarea id="seq" rows=20 cols=40></textarea>
+                
+            <select class="selectpicker" id="select" data-show-subtext="true">
+                <option value="fly">Drosophila melanogaster</option>
+                <option data-subtext="heart" value="vista_heart">Human VISTA</option>
+                <option data-subtext="neural" value="vista_neural">Human VISTA</option>
+                <option data-subtext="positives" value="vista_positives">Human VISTA</option>
+                <option data-subtext="heart" value="fantom_heart">Human FANTOM</option>
+                <option data-subtext="brain" value="fantom_brain">Human FANTOM</option>
+                <option data-subtext="both" value="fantom_both">Human FANTOM</option>
+
+            </select>
+
+            <button type="button" id="spoil" class="btn-default" onclick="clickSpoil('seq', 'select', '{{ csrf_token }}')">Mutate!</button><br>
+<button type="button" id="test" class="btn-default" onclick="clickTest()">Test - drosophila</button>
+<img src="{% static 'enpredict/images/ajax-loader.gif' %}" id="loading-indicator" style="display:none" />
+        </div>
+<div class="col-lg-6">
+<!--<h3 id="title_mutated" style="display:inline;">Sequence mutated:</h3>-->
+        <div>
+        <pre class="sequence" id="sequence_mutated" style="display:inline-block;">
+         10         20         30         40         50
+CTTAA<span style="color: red">G</span>TCAA TAAACGCCGC CCGGCGATTT GCGCATGACC ATGTACCCCG
+         60         70         80         90        100
+ATGCTGTGCG CCGTACGGTT GATG<span style="background-color: #FFFF00">CTGCAT GTTGCATGCA CTCAAC<span style="color: red">T</span>CAT</span>
+        110        120        130        140        150
+<span style="background-color: #FFFF00">GTGCAACATG CGG</span>CATCTGC GGCAGTAGCA GCAGCAGCAG CATCGGCCTC
+        160        170        180        190        200
+AATGTGCGTT GAG<span style="color: red">G</span>CCGACT TTAACTGCTT GGCAGGGGTT TCTTCAGGGG
+
+
+
+</pre>
+        </div>
+        </div>  
+</div>
+</div>-->
+{% endblock content %}

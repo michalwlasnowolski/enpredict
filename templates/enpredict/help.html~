@@ -1,0 +1,14 @@
+{% extends "enpredict/base.html" %}
+
+{% block title %} Help {% endblock %}
+{% block content %}
+
+
+<div class="container">
+<h2>Help</h2>
+  <p>można coś dodatć</p>            
+  
+
+
+
+{% endblock content %}

@@ -1,0 +1,236 @@
+import pickle
+import sys
+from sklearn import cross_validation
+from sklearn.metrics import auc_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import tree
+from choose_classifier import Classifier
+import random
+
+class Mutation():
+
+    def prediction(self, count_kmers, seq, classifier, which_database, dic, keys, frame):
+
+
+        kmers=count_kmers.count_vec(seq, dic, keys, frame)
+
+        predicted = classifier.predict_proba(kmers)
+        list_predicted=[]
+        predicted_len=len(predicted)
+        for i in xrange(predicted_len):
+            list_predicted.append(float(predicted[i][1]))
+
+        return list_predicted[0]
+        
+
+
+    def find_mutations(self, s, region):
+        all=set(["A","C","G","T"])
+        nucs=list(s)
+        seqs=[]
+
+        for i,nuc in enumerate(nucs):
+
+            if len(region)==0: 
+
+                for mut in all-set([nuc]):
+                    yield ["".join(nucs[:i]+[mut]+nucs[i+1:]), '%i%s' % (i, mut)]
+            else:
+                if i>=(region[0]-1) and i<= (region[1]-1):
+                   
+                    for mut in all-set([nuc]):
+                        yield ["".join(nucs[:i]+[mut]+nucs[i+1:]), '%i%s' % (i, mut)]
+                
+
+
+    def mutate(self, count_kmers, dic, keys, classifier, all_seq, candidates, results, how_many_best, how_many_random, cut_off, frame, region):
+
+        #print region
+
+        #czy  musi byc zapytanie, czy jest przynajmniej jeden??
+        candidate=candidates[0]
+
+        #print candidate
+        del(candidates[0])
+
+
+        seqs=[x for x in self.find_mutations(candidate[1], region)]
+
+        for_kmers=[]
+        mut_syms=[]
+        #print candidate[2]
+        if len(candidate[2])>1: old_muts=candidate[2].split('_')
+        else: old_muts=[]
+        
+        for i in seqs:
+            #print old_muts
+            new_seq_mut="_".join(sorted(list([i[1]] + old_muts)))
+            if not new_seq_mut in all_seq: 
+                for_kmers.append(i[0])
+                mut_syms.append(new_seq_mut)
+                #print new_seq_mut
+                all_seq[new_seq_mut]=''
+            else:
+                print new_seq_mut
+
+        if len(for_kmers)!=0:
+            kmers=[count_kmers.count_vec(x, dic, keys, frame) for x in for_kmers]
+            predicted = [classifier.predict_proba(i)[0][1] for i in kmers]
+            seq_pred=sorted(zip(predicted, for_kmers, mut_syms))[:how_many_best]
+            new_candidates=random.sample(seq_pred[1:], how_many_random)+[seq_pred[0]]
+        #print seq_pred
+        #new_candidates=[]
+        #try: new_candidates=random.sample(seq_pred[1:], how_many_random)+[seq_pred[0]]
+        #except: pass #print len(new_candidates)
+
+
+            #print len(new_candidates)
+
+            for i in new_candidates:
+                if i[0]<= cut_off:
+                    results.append(i)
+                else:
+                    candidates=candidates+[i]
+        #print results
+
+        print len(candidates)
+        return candidates, all_seq, results
+
+    def run_mutate(self, count_kmers, classifier, sequence, frame, how_many_best, how_many_random, cut_off, how_many_results, region):
+
+
+        all_seq={}
+
+
+        keys,dic=count_kmers.rc_kmers(count_kmers.all_kmers(4))
+        #which_classifier=Classifier()
+        #which_classifier_name=which_classifier.choose_classifier('fly')
+        #classifier = pickle.load(open(which_classifier_name))
+        #candidates = 
+
+        results=[]
+        reference_pred_seq=[classifier.predict_proba(count_kmers.count_vec(sequence, dic, keys, frame))[0][1], sequence, '']
+        candidates = [[classifier.predict_proba(count_kmers.count_vec(sequence, dic, keys, frame))[0][1], sequence, '']]
+        #results_cutoff=20
+        z=0
+
+
+
+
+        while len(candidates)!=0:
+            z+=1
+            print z, len(candidates), len(results)
+            candidates, all_seq, results=self.mutate(count_kmers, dic, keys, classifier, all_seq, candidates, results, how_many_best, how_many_random, cut_off, frame, region)
+
+            if len(results)>=how_many_results:
+                print len(results)
+                results=list(results[:how_many_results])
+
+                break
+
+        return results, reference_pred_seq
+
+
+
+    def mutation(self, start, end, cutter, count_kmers, classifier, which_database, candidates, dict_sequences, results_seq_pred, num_best_to_random, dic, keys, frame):
+
+        seq=candidates[0][1]
+
+
+
+        del(candidates[0])
+        seq_list=[]
+        alphabet=['T', 'A', 'G', 'C']
+        sep=''
+        the_lowest_list=[]
+            
+        seq_len=len(seq)
+        pre_k_best=[]
+        k_best=[]
+
+        seq_list=list(seq)
+
+        
+        for j in xrange(int(start), int(end)):
+            new_seq_list=list(seq_list)
+            for nucleotide in alphabet:
+                if seq_list[j]==nucleotide:
+                   
+                    pass
+                else:
+                    new_seq_list[j]=nucleotide
+                    new_seq=sep.join(new_seq_list)
+                    new_prediction=self.prediction(count_kmers, new_seq, classifier, which_database, dic, keys, frame)
+                    
+                    pre_k_best.append([new_prediction, new_seq])
+
+        k_best_sorted=sorted(pre_k_best)
+        
+
+        best_for_choice=[]
+
+
+        if k_best_sorted[0][1] in dict_sequences: print 'skucha - najlepszy juz byl w slowniku uzyty'
+
+
+        for i in xrange(0, len(k_best_sorted)):
+
+            if not k_best_sorted[i][1] in dict_sequences:
+                best_for_choice.append(k_best_sorted[i])
+
+            if len(best_for_choice) == num_best_to_random: 
+                break
+
+        ########## trzeba cos zmienic zeby nie bylo skuchy
+
+
+
+
+        #mozna sie zastanowic nad skresleniem tak duzej liczby opcji
+        ####to jest dobry#####
+        pre_candidates=[best_for_choice[0], random.choice(best_for_choice[1:])]
+        for i in xrange(len(pre_candidates)): 
+#0.63
+            dict_sequences[pre_candidates[i][1]]=pre_candidates[i][0]
+
+            if pre_candidates[i][0] < 0.80: 
+                results_seq_pred.append(pre_candidates[i])
+            
+            else:
+              candidates.append(pre_candidates[i])
+
+
+                        
+        return candidates, dict_sequences, results_seq_pred
+
+    
+    def best_mutation(self, start, end, seq, cutter, count_kmers, which_database, how_many_results, dic, keys, frame):
+
+
+        which_classifier=Classifier()
+        which_classifier_name=which_classifier.choose_classifier(which_database)
+        classifier = pickle.load(open(which_classifier_name))
+       
+        reference_result=self.prediction(count_kmers, seq, classifier, which_database, dic, keys, frame)
+
+        reference_seq_pred=[reference_result, seq]
+        #print reference_seq_pred
+
+        dict_sequences={seq:reference_result}
+        candidates=[[reference_result, seq]]        
+
+        results_seq_pred=[]
+
+        while len(candidates)!=0:
+            print len(candidates)
+            candidates, dict_sequences, results_seq_pred=self.mutation(start, end, cutter, count_kmers, classifier, which_database, candidates, dict_sequences, results_seq_pred, 10, dic, keys, frame, region)
+
+        finally_results=sorted(results_seq_pred)
+        if how_many_results>len(results_seq_pred): finally_results=sorted(results_seq_pred)
+        else:   finally_results=sorted(results_seq_pred)[:how_many_results]
+
+        return finally_results, reference_seq_pred
+
+
+
+

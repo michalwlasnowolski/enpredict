@@ -1,0 +1,164 @@
+{% extends "enpredict/base.html" %}
+{% load staticfiles %}
+
+{% block title %} Mutation {% endblock %}
+{% block content %}
+
+
+
+<div class="container">
+<div class="row">
+<div class="col-lg-12">
+<h2> Mutate enhancer </h2>
+</div>
+</div>
+
+
+    <div class="row">
+        <div class="col-lg-4">
+
+            
+            
+            <h3>Put DNA sequence:</h3>
+            <textarea spellcheck="false" id="seq" rows=20 cols=40></textarea><hr>
+        
+<div class="row">
+<div class="col-lg-6">
+<h4>Set test sequence <br> <small> and default parameters</small></h4>
+
+</div>
+<div class="col-lg-6">
+<select class="selectpicker" id="select_test_sequence" data-show-subtext="true" data-width="auto">
+                <option value="fly">REDFly</option>
+                <option value="fantom">FANTOM</option>
+                <option value="vista">VISTA</option>
+            </select>
+<button type="button" id="test" class="btn-default" onclick="clickTestSpoil()">Set</button>
+
+</div>
+
+</div>
+
+
+        </div>
+
+
+
+
+        <div class="col-lg-4">
+<h3>Set parameters:</h3><br>
+<div class="row">
+<div class="col-lg-6">
+select classifier:
+</div>
+
+<div class="col-lg-6">
+<select class="selectpicker" id="select_database" data-show-subtext="true" data-width="auto">
+                <option value="fly">D. melanogaster</option>
+                <option data-subtext="heart" value="vista_heart">Human VISTA</option>
+                <option data-subtext="neural" value="vista_neural">Human VISTA</option>
+                <option data-subtext="positives" value="vista_positives">Human VISTA</option>
+                <option data-subtext="heart" value="fantom_heart">Human FANTOM</option>
+                <option data-subtext="brain" value="fantom_brain">Human FANTOM</option>
+                <option data-subtext="both" value="fantom_both">Human FANTOM</option>
+
+            </select>
+</div>
+</div>
+
+<hr>
+
+<div class="row">
+<div class="col-lg-6">
+max. number of outputs:
+
+</div>
+<div class="col-lg-6">
+<input type="number" min="1" value="20" id="num_outputs">
+</div>
+
+</div>
+<hr>
+
+<div class="row">
+<div class="col-lg-6">
+cut-off:
+
+</div>
+<div class="col-lg-6">
+<input type="number" max="1" min="0"  value="0.63" step="0.01" id="cut_off">
+</div>
+
+</div>
+<hr>
+
+
+<div class="row">
+<div class="col-lg-6">
+n best sequences for random choice:
+
+</div>
+<div class="col-lg-6">
+<input type="number" min="1" id="k_choice" value="10">
+</div>
+
+</div>
+<hr>
+
+<div class="row">
+<div class="col-lg-6">
+k best sequences selceted randomly from n:
+
+</div>
+<div class="col-lg-6">
+<input type="number" min="0" id="random_from_best" value="1">
+</div>
+
+</div>
+<hr>
+
+<div class="row">
+<div class="col-lg-6">
+set mutation region:
+
+</div>
+<div class="col-lg-6">
+<input type="text" id="region" size="10px" placeholder="e.g. 30:50">
+</div>
+
+</div>
+<hr>
+<div class="row">
+<div class="col-lg-6">
+run mutate:
+</div>
+<div class="col-lg-6">
+<button type="button" id="spoil" class="btn-default mutate_btn" onclick="clickSpoil('seq', 'num_outputs', 'cut_off', 'k_choice', 'random_from_best', 'region', '{{ csrf_token }}')">Mutate!</button>
+<img src="{% static 'enpredict/images/ajax-loader.gif' %}" id="loading-indicator" style="display:none" />
+</div>
+</div>
+
+
+        </div>
+        
+
+
+<div class="col-lg-4">
+
+<div class="row">
+
+<textarea spellcheck="false" id="errors_area" readonly="True" style="display:none; color:red " rows=8 cols=40></textarea>
+</div>
+</div>
+
+
+  </div>
+
+
+
+<div id="content_my">
+</div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,35 @@
+import hotshot
+import os
+import time
+#import settings
+import tempfile
+
+# -*- coding: utf-8 -*-
+
+from scripts.seq_cutter import SeqCutter
+from scripts.kmers import Kmers
+from scripts.predict import Predict
+#from scripts.spoil import Mutation
+from scripts.spoil3 import Mutation
+import numpy as np
+from django.http import JsonResponse
+import json
+from .models import WigFile
+import os
+import pickle
+from scripts.choose_classifier import Classifier
+from django.shortcuts import render
+from bokeh.plotting import figure
+from bokeh.embed import components
+from scripts.comparator import Comparator
+from scripts.template_mutation import TemplateMutation
+
+lista=[1,2,3,4]
+
+def jak_to_dziala(lista):
+    s=len(lista)
+
+    return
+
+jak_do_dziala(lista)
+    

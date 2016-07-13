@@ -1,0 +1,97 @@
+{% extends "enpredict/base.html" %}
+{% load staticfiles %}
+{% block title %} Resources {% endblock %}
+{% block content %}
+
+
+
+
+
+
+<div class="container">
+
+<div class="row">
+<div class="col-lg-8">
+<h2>Resources - {{database_name}}</h2><br>
+
+
+
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-lg-6">
+
+<h3>Download all files: <a href="/static/enpredict/data/{% if database_name == 'Drosophila melanogaster (dm3)' %}fly{% else %}vista{% endif %}.tar.gz" download>{{database_name}}</a></h3>
+
+</div></div>
+{% for record in records_list %}
+<div class="row">
+<div class="col-lg-6">
+
+
+<h3>Chromosome: {{record.0.chr_name}}<br>
+
+
+</div>
+</div>
+<div class="row">
+<div class="col-lg-6">
+<hr>
+  <table class="table table-hover table-responsive table-striped">
+    <thead>
+      <tr>
+        <th>No.</th>
+		{% if database_name != 'Drosophila melanogaster (dm3)' %}
+        <th>Specific tissue</th>
+		{% endif %}
+        <th>Modification</th>
+		{% if database_name == 'Drosophila melanogaster (dm3)' %}
+        <th>k-mers</th>
+		{% endif %}
+        <th>View in UCSC</th>
+      </tr>
+    </thead>
+    <tbody>
+
+
+{% for object in record %}
+      <tr>
+        
+        <td>{{forloop.counter}}</td>
+        
+		{% if object.species == 'Hs' %}
+        <td>{{object.get_specific_tissue_display}}</td>
+		{% endif %}
+        <td>{{object.get_modification_display}}</td>
+		{% if object.species == 'Dm' %}
+        <td>{{object.get_kmers_display}}</td>
+		{% endif %}
+        <td align="center"><a href="http://genome.ucsc.edu/cgi-bin/hgTracks?db={% if object.species == 'Hs' %}hg19&position=chr{{forloop.parentloop.counter}}{%else%}dm3&position={{object.chr_name}}{% endif %}&hgt.customText=http://regulomics.mimuw.edu.pl/~enpredict/{{object.file_path}}" target="_blank"><span class="glyphicon glyphicon-upload"></span></a></td>
+
+{% endfor %}
+
+
+
+
+
+    </tbody>
+  </table>
+</div></div>
+<div class="row">
+<div class="col-lg-6 col-lg-push-4">
+
+
+</div>
+</div>
+<div class="row">
+<div class="col-lg-6">
+<hr>
+</div>
+</div>
+
+{% endfor %}  
+
+</div>
+{% endblock content %}
